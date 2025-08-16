@@ -3,20 +3,26 @@ import { prisma } from "@/lib/db/prisma";
 import { Metadata } from "next";
 
 interface SearchPageProps {
-  searchParams: { query: string };
+  searchParams: Promise<{ query: string }>;
 }
 
-export function generateMetadata({
-  searchParams: { query },
-}: SearchPageProps): Metadata {
+export async function generateMetadata(
+  props: SearchPageProps,
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+
+  const { query } = searchParams;
+
   return {
     title: `Search: ${query} - eShop`,
   };
 }
 
-export default async function SearchPage({
-  searchParams: { query },
-}: SearchPageProps) {
+export default async function SearchPage(props: SearchPageProps) {
+  const searchParams = await props.searchParams;
+
+  const { query } = searchParams;
+
   const products = await prisma.product.findMany({
     where: {
       OR: [
