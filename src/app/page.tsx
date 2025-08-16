@@ -5,14 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface HomeProps {
-  searchParams: {
+  searchParams: Promise<{
     page: string;
-  };
+  }>;
 }
 
-export default async function Home({
-  searchParams: { page = "1" },
-}: HomeProps) {
+export default async function Home(props: HomeProps) {
+  const searchParams = await props.searchParams;
+
+  const { page = "1" } = searchParams;
+
   const currentPage = parseInt(page);
 
   const pageSize = 6;
